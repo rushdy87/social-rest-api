@@ -17,5 +17,6 @@ router.put('/:id/like', postsController.likePost);
 router.get('/:id', postsController.getPost);
 
 // get timeline (all posts for following)
+router.get('/timeline/all', postsController.getTimelinePosts);
 
 module.exports = router;

@@ -1,4 +1,5 @@
 const Post = require('../models/Post');
+const User = require('../models/User');
 
 exports.createPost = async (req, res) => {
   const newPost = new Post(req.body);
@@ -68,6 +69,23 @@ exports.getPost = async (req, res) => {
     } else {
       res.status(404).json('There is no Post with this id');
     }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+exports.getTimelinePosts = async (req, res) => {
+  const { userId } = req.body;
+
+  try {
+    const currentUser = await User.findById(userId);
+    const userPosts = await Post.find({ userId: currentUser._id });
+    const followingsPosts = await Promise.all(
+      currentUser.followings.map((followingId) => {
+        return Post.find({ userId: followingId });
+      })
+    );
+    res.status(200).json([...userPosts, ...followingsPosts]);
   } catch (error) {
     res.status(500).json(error);
   }
