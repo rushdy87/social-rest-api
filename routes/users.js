@@ -11,10 +11,9 @@ router.delete('/:id', userController.deleteUser);
 router.get('/:id', userController.getUser);
 
 // Follow a user
-// Unfollow a user
+router.put('/:id/follow', userController.putFollow);
 
-router.get('/', (req, res) => {
-  res.send('USER PAGE');
-});
+// Unfollow a user
+router.put('/:id/unfollow', userController.putUnfollow);
 
 module.exports = router;
