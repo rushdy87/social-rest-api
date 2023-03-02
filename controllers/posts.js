@@ -41,3 +41,34 @@ exports.deletePost = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
+exports.likePost = async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.body;
+  try {
+    const post = await Post.findById(id);
+    if (!post.likes.includes(userId)) {
+      await post.updateOne({ $push: { likes: userId } });
+      res.status(200).json('The post has been liked');
+    } else {
+      await post.updateOne({ $pull: { likes: userId } });
+      res.status(200).json('The post has been unliked');
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+exports.getPost = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const post = await Post.findById(id);
+    if (post) {
+      res.status(200).send(post);
+    } else {
+      res.status(404).json('There is no Post with this id');
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
